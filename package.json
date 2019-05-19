@@ -1,0 +1,23 @@
+{
+  "name": "realworld-e2e",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts":{
+    "test":"jest"
+  },
+  "devDependencies": {
+    "chromedriver": "^74.0.0",
+    "jest": "^24.8.0",
+    "jest-environment-selenium": "^2.1.1",
+    "prettier": "^1.17.1",
+    "selenium-webdriver": "^4.0.0-alpha.1"
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-selenium",
+    "setupFilesAfterEnv": ["jest-environment-selenium/dist/setup.js"]
+  },
+  "dependencies": {
+    "jest-environment-node": "^23.1.0"
+  }
+}
