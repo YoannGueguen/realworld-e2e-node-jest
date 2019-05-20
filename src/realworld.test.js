@@ -1,15 +1,18 @@
-var PASSWORD = "conduit";
-var EMAIL = "conduit@realworld.io";
+const PASSWORD = "conduit";
+const USERNAME = "conduit";
+const EMAIL = "conduit@realworld.io";
 
-/*test('loads conduit frontent', async () => {
+test('loads conduit frontent', async () => {
 
-    connectUserIfNeeded(EMAIL, PASSWORD);
+    await driver.get('http://localhost:4100/');
+
+    connectUserIfNeeded(EMAIL, PASSWORD, USERNAME);
 
     await driver.wait(until.elementLocated(By.partialLinkText('New Post')), 4000);
     const newPostLink = await driver.findElement(By.partialLinkText('New Post'));
     expect(newPostLink).toBePresent();
 
-});*/
+});
 
 test('create article with connected user', async () => {
 
@@ -22,7 +25,7 @@ test('create article with connected user', async () => {
     await driver.get('http://localhost:4100/');
 
     //  Connect user first
-    connectUserIfNeeded(EMAIL, PASSWORD);
+    connectUserIfNeeded(EMAIL, PASSWORD, USERNAME);
 
     await driver.wait(until.elementLocated(By.partialLinkText('New Post')), 4000);
 
@@ -61,35 +64,72 @@ test('create article with connected user', async () => {
 
 });
 
-async function connectUser(email, mdp) {
+test('register user', async () => {
 
-    const signInLink = await driver.findElement(By.linkText('Sign in'));
-    expect(signInLink).toBePresent();
+    await driver.get('http://localhost:4100');
 
-    await signInLink.click();
-    const emailField = await driver.findElement(By.css('input[placeholder="Email"'));
+    const rnd = getRandomInt(1000);
+    await registerUser(
+        USERNAME + rnd,
+        EMAIL,
+        PASSWORD + rnd
+    );
+
+    const homeBnt = await driver.findElement(By.linkText('Home'));
+    expect(homeBnt).toBePresent();
+
+})
+
+async function registerUser(username, email, pwd){
+
+    const signUpLink = await driver.findElement(By.linkText('Sign up'));   
+    expect(signUpLink).toBePresent(); 
+    await signUpLink.click();
+
+    await driver.wait(until.elementLocated(By.css('input[placeholder="Username"]')), 4000);
+
+    const usernameField = await driver.findElement(By.css('input[placeholder="Username"]'));
+    expect(usernameField).toBePresent();
+    usernameField.sendKeys(username);
+
+    const emailField = await driver.findElement(By.css('input[placeholder="Email"]'));
+    expect(emailField).toBePresent();
     emailField.sendKeys(email);
-    const password = await driver.findElement(
-        By.css('input[placeholder="Password"')
-    );
-    password.sendKeys(mdp);
-    const signInButton = await driver.findElement(
-        By.css('button[type="submit"]')
-    );
-    expect(signInButton).toBePresent();
 
-    signInButton.click();
+    const password = await driver.findElement(By.css('input[placeholder="Password"]'));
+    expect(password).toBePresent();
+    password.sendKeys(pwd);
+
+    const signUpButton = await driver.findElement(By.css('button[type="submit"]'));
+    expect(signUpButton).toBePresent();
+    signUpButton.click();
+
+    await driver.wait(until.elementLocated(By.linkText('Home')), 4000);
+
 }
 
-async function connectUserIfNeeded(email, password) {
-    homeClick();
+/*test('Like article if it exists', async => {
+
+});*/
+
+async function likesArticles(){
+
+}
+
+/*test('Create new article', async => {
+
+});*/
+
+async function connectUserIfNeeded(email, password, username) {
+    
+    await homeClick(username);
 
     const signInLink = await driver.findElement(By.linkText('Sign in'));
 
     //check if an user is connected 
     if (signInLink === undefined || signInLink === null) {
         //check if it's the correct user
-        settingsClick();
+        await settingsClick();
         const currentConnectedEmail = await driver.findElement(By.css('input[placeholder="Email"]'));
         if (currentConnectedEmail !== email) {
             await logOff();
@@ -99,41 +139,37 @@ async function connectUserIfNeeded(email, password) {
         //connect the user   
         await connectUser(email, password);
     }
+
 }
 
 async function connectUser(email, mdp) {
 
     const signInLink = await driver.findElement(By.linkText('Sign in'));
-    //expect(signInLink).toBePresent();
-
     await signInLink.click();
+
     const emailField = await driver.findElement(By.css('input[placeholder="Email"]'));
     emailField.sendKeys(email);
-    const password = await driver.findElement(
-        By.css('input[placeholder="Password"]')
-    );
-    password.sendKeys(mdp);
-    const signInButton = await driver.findElement(
-        By.css('button[type="submit"]')
-    );
-    //expect(signInButton).toBePresent();
 
+    const password = await driver.findElement(By.css('input[placeholder="Password"]'));
+    password.sendKeys(mdp);
+
+    const signInButton = await driver.findElement(By.css('button[type="submit"]'));
     signInButton.click();
+
 }
 
-async function homeClick() {
-    const homeBtn = await driver.findElement(By.linkText('conduit'));
-    expect(homeBtn).toBePresent();
+async function homeClick(username) {
+    const homeBtn = await driver.findElement(By.linkText(username));
     homeBtn.click();
 }
+
 async function settingsClick() {
     const settingsBtn = await driver.findElement(By.css('a[href="/settings"]'));
-    expect(settingsBtn).toBePresent();
     settingsBtn.click();
 }
+
 async function logOff() {
     const btnLogOff = await driver.findElement(By.css('button[class="btn btn-outline-danger"]'));
-    expect(btnLogOff).toBePresent();
     btnLogOff.click();
 }
 
