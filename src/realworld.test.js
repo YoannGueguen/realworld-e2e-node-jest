@@ -114,9 +114,14 @@ test('Like article if it exists', async () => {
 
     await connectUserIfNeeded(EMAIL, PASSWORD, USERNAME);
 
-    await likesArticles();
+    const beforeClickVal = await likesArticles();
 
-    expect(1).toBe(1);
+    const ionHearts = await driver.findElements(By.xpath("//button[contains(@class, 'btn btn-sm btn-outline-primary')]"));
+    const firstOne = ionHearts[0];
+    const afterClick = await firstOne.getText();
+
+    console.log('before', beforeClickVal);
+    console.log('after', afterClick);
 
 });
 
@@ -128,10 +133,17 @@ async function likesArticles() {
     //  go to global feed
     const globalFeedBnt = await driver.findElement(By.partialLinkText('Global Feed'));
     await globalFeedBnt.click();
+    
+    //  wait sub-page
+    await driver.wait(until.elementLocated(By.css('div.article-preview')), 4000);
 
-    const ionHearts = await driver.findElements(By.xpath("//*[contains(@class, 'btn btn-sm btn-outline-primary')]"));
-    console.log('hearts', ionHearts);
+    //  click on fav button
+    
+    const ionHearts = await driver.findElements(By.xpath("//button[contains(@class, 'btn btn-sm btn-outline-primary')]"));
+    const beforeClick = await ionHearts[0].getText();
     await ionHearts[0].click();
+
+    return beforeClick;
 
 }
 
