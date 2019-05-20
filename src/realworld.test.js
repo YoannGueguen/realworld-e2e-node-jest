@@ -27,34 +27,7 @@ test('create article with connected user', async () => {
     //  Connect user first
     await connectUserIfNeeded(EMAIL, PASSWORD, USERNAME);
 
-    await driver.wait(until.elementLocated(By.partialLinkText('New Post')), 4000);
-
-    //  click on button 'new post's
-    const newPostLink = await driver.findElement(By.linkText('New Post'));
-    await newPostLink.click();
-
-    //  fill article title
-    const articleTitleField = await driver.findElement(By.css('input[placeholder="Article Title"]'));
-    articleTitleField.sendKeys(testArticleTitle);
-
-    //  fill about field
-    const aboutField = await driver.findElement(By.css('input[placeholder="What\'s this article about?"]'));
-    aboutField.sendKeys(testArticleAbout);
-
-    //  fill article content markdown
-    const contentField = await driver.findElement(By.css('textarea[placeholder="Write your article (in markdown)"]'));
-    contentField.sendKeys(testArticleContent);
-
-    //  fill tags
-    const tagsField = await driver.findElement(By.css('input[placeholder="Enter tags"]'));
-    tagsField.sendKeys(testArticleTags);
-
-    //  press enter to validates
-    tagsField.sendKeys("\n");
-
-    //  click on  publish article
-    const publishButton = await driver.findElement(By.css('button[type="button"]'));
-    publishButton.click();
+    await createArticle(testArticleTitle, testArticleAbout, testArticleContent, testArticleTags);
 
     //  see header show with title equal to previous enter title
     await driver.wait(until.elementLocated(By.css('div.article-page')), 4000);
@@ -79,6 +52,41 @@ test('register user', async () => {
     expect(homeBnt).toBePresent();
 
 })
+
+async function createArticle(testArticleTitle, testArticleAbout, testArticleContent, testArticleTags) {
+    await driver.wait(until.elementLocated(By.partialLinkText('New Post')), 4000);
+    //  click on button 'new post's
+    const newPostLink = await driver.findElement(By.linkText('New Post'));
+    await newPostLink.click();
+    //  fill article title
+    const articleTitleField = await driver.findElement(By.css('input[placeholder="Article Title"]'));
+    articleTitleField.sendKeys(testArticleTitle);
+    //  fill about field
+    const aboutField = await driver.findElement(By.css('input[placeholder="What\'s this article about?"]'));
+    aboutField.sendKeys(testArticleAbout);
+    //  fill article content markdown
+    const contentField = await driver.findElement(By.css('textarea[placeholder="Write your article (in markdown)"]'));
+    contentField.sendKeys(testArticleContent);
+    //  fill tags
+    const tagsField = await driver.findElement(By.css('input[placeholder="Enter tags"]'));
+    tagsField.sendKeys(testArticleTags);
+    //  press enter to validates
+    tagsField.sendKeys("\n");
+    //  click on  publish article
+    const publishButton = await driver.findElement(By.css('button[type="button"]'));
+
+    publishButton.click();
+}
+
+ test('create article and delete it', async () => {
+    await driver.get('http://localhost:4100/');
+    
+    await createArticle( "coucou","coucou","coucou","coucou");
+
+    const removeArticleBtn = await driver.findElement(By.css('button[class="btn btn-outline-danger btn-sm"]'));
+    expect(removeArticleBtn).toBePresent();
+    removeArticleBtn.click();
+ });
 
 async function registerUser(username, email, pwd){
 
