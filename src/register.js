@@ -1,7 +1,10 @@
- 
-test('loads conduit frontend with register', async => {
-    registerUser("conduit1", "conduit1@realworld.io", "conduit1");
-    expect(newPostLink).toBePresent();
+ const USERNAME = "conduit1",
+     EMAIL = "conduit1@realworld.io",
+     PWD = "conduit1";
+
+test('create account register', async => {
+    registerUser(USERNAME, EMAIL, PWD);
+
 });
 
 async function registerUser(username, email, pwd){
@@ -13,14 +16,14 @@ async function registerUser(username, email, pwd){
     await signUpLink.click();
 
     const usernameField = await driver.findElement(By.css('input[placeholder="Username"'));
-    emailField.sendKeys(username);
+    usernameField.sendKeys(username);
 
     const emailField = await driver.findElement(By.css('input[placeholder="Email"'));
     emailField.sendKeys(email);
     const password = await driver.findElement(
         By.css('input[placeholder="Password"')
     );
-    password.sendKeys(mdp);
+    password.sendKeys(pwd);
     const signUpButton = await driver.findElement(
         By.css('button[type="submit"]')
     );
@@ -28,6 +31,12 @@ async function registerUser(username, email, pwd){
 
     signUpButton.click();
 }
-test('verify likes article', async =>{
+test('Like article if it exists', async => {
+
+});
+async function likesArticles(){
+
+}
+test('Create new article', async => {
 
 });

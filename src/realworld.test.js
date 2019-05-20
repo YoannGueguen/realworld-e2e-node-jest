@@ -61,6 +61,26 @@ test('create article with connected user', async () => {
 
 });
 
+async function connectUser(email, mdp) {
+
+    const signInLink = await driver.findElement(By.linkText('Sign in'));
+    expect(signInLink).toBePresent();
+
+    await signInLink.click();
+    const emailField = await driver.findElement(By.css('input[placeholder="Email"'));
+    emailField.sendKeys(email);
+    const password = await driver.findElement(
+        By.css('input[placeholder="Password"')
+    );
+    password.sendKeys(mdp);
+    const signInButton = await driver.findElement(
+        By.css('button[type="submit"]')
+    );
+    expect(signInButton).toBePresent();
+
+    signInButton.click();
+}
+
 async function connectUserIfNeeded(email, password) {
     homeClick();
 
@@ -72,7 +92,7 @@ async function connectUserIfNeeded(email, password) {
         settingsClick();
         const currentConnectedEmail = await driver.findElement(By.css('input[placeholder="Email"]'));
         if (currentConnectedEmail !== email) {
-            await LogOff();
+            await logOff();
             await connectUser(email, password);
         }
     } else {
@@ -102,7 +122,7 @@ async function connectUser(email, mdp) {
 }
 
 async function homeClick() {
-    const homeBtn = await driver.findElement(By.css('a[href="/"]'));
+    const homeBtn = await driver.findElement(By.linkText('conduit'));
     expect(homeBtn).toBePresent();
     homeBtn.click();
 }
@@ -111,8 +131,7 @@ async function settingsClick() {
     expect(settingsBtn).toBePresent();
     settingsBtn.click();
 }
-
-async function LogOff() {
+async function logOff() {
     const btnLogOff = await driver.findElement(By.css('button[class="btn btn-outline-danger"]'));
     expect(btnLogOff).toBePresent();
     btnLogOff.click();
