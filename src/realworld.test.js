@@ -11,8 +11,8 @@ test('loads conduit frontent', async () => {
 
 });
 
-async function connectUser(email , mdp ){
- 
+async function connectUser(email, mdp) {
+
     const signInLink = await driver.findElement(By.linkText('Sign in'));
     expect(signInLink).toBePresent();
 
@@ -46,7 +46,7 @@ test('create article with connected user', async () => {
     //  click on button 'new post's
     const newPostLink = await driver.findElement(By.linkText('New Post'));
     await newPostLink.click();
-    
+
     //  fill article title
     const articleTitleField = await driver.findElement(By.css('input[placeholder="Article Title"]'));
     articleTitleField.sendKeys(testArticleTitle);
@@ -79,22 +79,34 @@ test('create article with connected user', async () => {
 });
 
 async function connectUserIfNeeded(email, password) {
-    
+    homeClick();
+
     const signInLink = await driver.findElement(By.linkText('Sign in'));
-  
+
     //check if an user is connected 
-    if(signInLink === undefined || signInLink === null){
+    if (signInLink === undefined || signInLink === null) {
         //check if it's the correct user
-        await driver.get('http://localhost:4100/settings');
+        settingsClick();
         const currentConnectedEmail = await driver.findElement(By.css('input[placeholder="Email"]'));
-        if(currentConnectedEmail !==  email){
+        if (currentConnectedEmail !== email) {
             await LogOff();
             await connectUser(email, password);
         }
-    }else{
-       //connect the user   
-       await connectUser(email, password);
+    } else {
+        //connect the user   
+        await connectUser(email, password);
     }
+}
+
+async function homeClick() {
+    const homeBtn = await driver.findElement(By.css('a[href="/"]'));
+    expect(homeBtn).toBePresent();
+    homeBtn.click();
+}
+async function settingsClick() {
+    const settingsBtn = await driver.findElement(By.css('a[href="/settings"]'));
+    expect(settingsBtn).toBePresent();
+    settingsBtn.click();
 }
 
 async function LogOff() {
