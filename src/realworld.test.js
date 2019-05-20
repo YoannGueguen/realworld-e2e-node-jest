@@ -108,12 +108,14 @@ async function registerUser(username, email, pwd){
 
 }
 
-/*test('Like article if it exists', async => {
-
-});*/
+test('Like article if it exists', async => {
+    expect(likesArticles()).toBePresent();
+});
 
 async function likesArticles(){
-
+    const favBtn = await driver.findElement(By.css('ion-heart'));
+    expect(favBtn).toBePresent();
+    favBtn.click();
 }
 
 /*test('Create new article', async => {
