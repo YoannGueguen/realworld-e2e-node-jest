@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "scripts":{
-    "test":"jest"
+  "scripts": {
+    "test": "jest"
   },
   "devDependencies": {
     "chromedriver": "^74.0.0",
@@ -15,7 +15,9 @@
   },
   "jest": {
     "testEnvironment": "jest-environment-selenium",
-    "setupFilesAfterEnv": ["jest-environment-selenium/dist/setup.js"]
+    "setupFilesAfterEnv": [
+      "jest-environment-selenium/dist/setup.js"
+    ]
   },
   "dependencies": {
     "jest-environment-node": "^23.1.0"
