@@ -54,10 +54,10 @@ test('create article with connected user', async () => {
     publishButton.click();
 
     //  see header show with title equal to previous enter title
-    await driver.wait(until.elementLocated(By.css('div[class="article-page"]')), 4000);
+    await driver.wait(until.elementLocated(By.css('div.article-page')), 4000);
 
-    const articlePage = await driver.findElement(By.css('div[class="article-page"]'));
-    except(articlePage).toBePresent();
+    const articlePage = await driver.findElement(By.css('div.article-page'));
+    expect(articlePage).toBePresent();
 
 });
 
