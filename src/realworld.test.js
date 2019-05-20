@@ -6,7 +6,7 @@ test('loads conduit frontent', async () => {
 
     await driver.get('http://localhost:4100/');
 
-    connectUserIfNeeded(EMAIL, PASSWORD, USERNAME);
+    await connectUserIfNeeded(EMAIL, PASSWORD, USERNAME);
 
     await driver.wait(until.elementLocated(By.partialLinkText('New Post')), 4000);
     const newPostLink = await driver.findElement(By.partialLinkText('New Post'));
@@ -25,7 +25,7 @@ test('create article with connected user', async () => {
     await driver.get('http://localhost:4100/');
 
     //  Connect user first
-    connectUserIfNeeded(EMAIL, PASSWORD, USERNAME);
+    await connectUserIfNeeded(EMAIL, PASSWORD, USERNAME);
 
     await driver.wait(until.elementLocated(By.partialLinkText('New Post')), 4000);
 
@@ -108,14 +108,31 @@ async function registerUser(username, email, pwd){
 
 }
 
-test('Like article if it exists', async => {
-    expect(likesArticles()).toBePresent();
+test('Like article if it exists', async () => {
+
+    await driver.get('http://localhost:4100');
+
+    await connectUserIfNeeded(EMAIL, PASSWORD, USERNAME);
+
+    await likesArticles();
+
+    expect(1).toBe(1);
+
 });
 
-async function likesArticles(){
-    const favBtn = await driver.findElement(By.css('ion-heart'));
-    expect(favBtn).toBePresent();
-    favBtn.click();
+async function likesArticles() {
+
+    //  wait page
+    await driver.wait(until.elementLocated(By.partialLinkText('Global Feed')), 4000);
+
+    //  go to global feed
+    const globalFeedBnt = await driver.findElement(By.partialLinkText('Global Feed'));
+    await globalFeedBnt.click();
+
+    const ionHearts = await driver.findElements(By.xpath("//*[contains(@class, 'btn btn-sm btn-outline-primary')]"));
+    console.log('hearts', ionHearts);
+    await ionHearts[0].click();
+
 }
 
 /*test('Create new article', async => {
